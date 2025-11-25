@@ -25,7 +25,7 @@ runs:
         fi
         
         curl -fsSL https://raw.githubusercontent.com/quarkdown-labs/get-quarkdown/refs/heads/main/install.sh | bash -s -- $INSTALL_ARGS
-        echo "$INSTALL_DIR/bin" >> $GITHUB_PATH
+        echo "/usr/local/bin" >> $GITHUB_PATH
 
     - name: Verify installation
       shell: bash
