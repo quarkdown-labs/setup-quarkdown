@@ -1,7 +1,4 @@
-# Workflow to update the major version tag on new releases
-# e.g., if a tag v2.3.4 is pushed, it will update the v2 tag to point to the same commit.
-
-name: Update Major Tag
+name: Release
 
 on:
   push:
@@ -16,9 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Updates the major version tag on new releases.
+      # e.g., if a tag v2.3.4 is pushed, it will update the v2 tag to point to the same commit.
       - name: Update major version tag
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
           MAJOR=${VERSION%%.*}
           git tag -f $MAJOR
           git push -f origin $MAJOR
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2.2.2
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          generate_release_notes: true
