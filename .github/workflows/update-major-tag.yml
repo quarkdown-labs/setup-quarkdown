@@ -1,0 +1,23 @@
+# Workflow to update the major version tag on new releases
+# e.g., if a release with tag v2.3.4 is published, it will update the v2 tag to point to the same commit.
+
+name: Update Major Tag
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update major version tag
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          MAJOR=${VERSION%%.*}
+          git tag -f $MAJOR
+          git push -f origin $MAJOR
