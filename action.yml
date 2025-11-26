@@ -21,7 +21,11 @@ runs:
         INSTALL_ARGS="--prefix $INSTALL_DIR"
         
         if [ -n "${{ inputs.quarkdown-version }}" ]; then
-          INSTALL_ARGS="$INSTALL_ARGS --tag v${{ inputs.quarkdown-version }}"
+          if [ "${{ inputs.quarkdown-version }}" = "devbuild" ]; then
+            INSTALL_ARGS="$INSTALL_ARGS --tag latest"
+          else
+            INSTALL_ARGS="$INSTALL_ARGS --tag v${{ inputs.quarkdown-version }}"
+          fi
         fi
         
         curl -fsSL https://raw.githubusercontent.com/quarkdown-labs/get-quarkdown/refs/heads/main/install.sh | bash -s -- $INSTALL_ARGS
