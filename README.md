@@ -1,6 +1,6 @@
 # setup-quarkdown ![GitHub Tag](https://img.shields.io/github/v/tag/quarkdown-labs/setup-quarkdown?label=version&color=mediumseagreen)
 
-A GitHub Action to install the [Quarkdown](https://github.com/quarkdown-labs/quarkdown) CLI.
+A GitHub Action to install the [Quarkdown](https://github.com/iamgio/quarkdown) CLI.
 
 ## Usage
 
