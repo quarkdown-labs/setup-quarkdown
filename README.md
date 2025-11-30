@@ -24,4 +24,4 @@ steps:
       quarkdown-version: '1.12.0'
 ```
 
-Use `quarkdown-version: devbuild` to use on the latest Quarkdown build from the main branch instead (potentially unstable).
+Use `devbuild` to use the latest Quarkdown build from the main branch instead (potentially unstable).
