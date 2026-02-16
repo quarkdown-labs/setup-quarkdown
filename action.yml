@@ -14,12 +14,14 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    # Linux / macOS
     - name: Install Quarkdown
+      if: runner.os != 'Windows'
       shell: bash
       run: |
         INSTALL_DIR="$RUNNER_TOOL_CACHE/quarkdown"
         INSTALL_ARGS="--prefix $INSTALL_DIR"
-        
+
         if [ -n "${{ inputs.quarkdown-version }}" ]; then
           if [ "${{ inputs.quarkdown-version }}" = "devbuild" ]; then
             INSTALL_ARGS="$INSTALL_ARGS --tag latest"
@@ -27,10 +29,25 @@ runs:
             INSTALL_ARGS="$INSTALL_ARGS --tag v${{ inputs.quarkdown-version }}"
           fi
         fi
-        
+
         curl -fsSL https://raw.githubusercontent.com/quarkdown-labs/get-quarkdown/refs/heads/main/install.sh | bash -s -- $INSTALL_ARGS
         echo "/usr/local/bin" >> $GITHUB_PATH
 
+    # Windows
+    - name: Set up Scoop
+      if: runner.os == 'Windows'
+      uses: MinoruSekine/setup-scoop@v4.0.2
+      with:
+        buckets: java
+
+    - name: Install Quarkdown via Scoop
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        scoop bucket add quarkdown https://github.com/quarkdown-labs/scoop-quarkdown
+        scoop install quarkdown
+
+    # All platforms
     - name: Verify installation
       shell: bash
       run: quarkdown --version
