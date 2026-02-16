@@ -25,3 +25,7 @@ steps:
 ```
 
 Use `devbuild` to use the latest Quarkdown build from the main branch instead (potentially unstable).
+
+## Windows disclaimer
+
+This action supports Windows. Quarkdown is set up via Scoop, resulting in a longer setup time. Specifying a version does not work on Windows, as only the latest Quarkdown version is available.
