@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Quarkdown
+        uses: ./
+
+      - name: Test Quarkdown
+        shell: bash
+        run: |
+          echo ".docname {test}" > main.qd
+
+          quarkdown c main.qd -o ./output
+
+          ls ./output
+
+          if [ ! -d "./output/test" ]; then
+            echo "Output directory not found" >&2
+            exit 1
+          fi
+
+          quarkdown c main.qd -o ./output --pdf --pdf-no-sandbox
+
+          ls ./output
+
+          if [ ! -f "./output/test.pdf" ]; then
+            echo "Output PDF not found" >&2
+            exit 1
+          fi
