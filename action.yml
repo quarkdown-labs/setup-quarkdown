@@ -32,6 +32,7 @@ runs:
 
         curl -fsSL https://raw.githubusercontent.com/quarkdown-labs/get-quarkdown/refs/heads/main/install.sh | bash -s -- $INSTALL_ARGS
         echo "/usr/local/bin" >> $GITHUB_PATH
+        echo "QD_NPM_PREFIX=$INSTALL_DIR/lib" >> $GITHUB_ENV
 
     # Windows
     - name: Install Quarkdown
@@ -53,6 +54,7 @@ runs:
 
         & ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/quarkdown-labs/get-quarkdown/refs/heads/main/install.ps1' -UseBasicParsing).Content)) @installArgs
         echo "$installDir\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        echo "QD_NPM_PREFIX=$installDir\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     # All platforms
     - name: Verify installation
