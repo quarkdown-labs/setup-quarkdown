@@ -34,18 +34,25 @@ runs:
         echo "/usr/local/bin" >> $GITHUB_PATH
 
     # Windows
-    - name: Set up Scoop
-      if: runner.os == 'Windows'
-      uses: MinoruSekine/setup-scoop@v4.0.2
-      with:
-        buckets: java
-
-    - name: Install Quarkdown via Scoop
+    - name: Install Quarkdown
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        scoop bucket add quarkdown https://github.com/quarkdown-labs/scoop-quarkdown
-        scoop install quarkdown
+        $installArgs = @{}
+        $installDir = "$env:RUNNER_TOOL_CACHE\quarkdown"
+        $installArgs["-Prefix"] = $installDir
+
+        $version = "${{ inputs.quarkdown-version }}"
+        if ($version) {
+          if ($version -eq "devbuild") {
+            $installArgs["-Tag"] = "latest"
+          } else {
+            $installArgs["-Tag"] = "v$version"
+          }
+        }
+
+        & ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/quarkdown-labs/get-quarkdown/refs/heads/main/install.ps1' -UseBasicParsing).Content)) @installArgs
+        echo "$installDir\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     # All platforms
     - name: Verify installation
