@@ -52,6 +52,14 @@ runs:
         }
 
         & ([scriptblock]::Create((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/quarkdown-labs/get-quarkdown/refs/heads/main/install.ps1' -UseBasicParsing).Content)) @installArgs
+
+        # Create a bash-compatible shim so that `quarkdown` is resolvable from Git Bash,
+        # which does not use Windows' PATHEXT to resolve .cmd files.
+        $shim = "$installDir/quarkdown"
+        Set-Content -Path $shim -Value '#!/bin/bash' -NoNewline
+        Add-Content -Path $shim -Value ''
+        Add-Content -Path $shim -Value 'cmd //c "$(dirname "$0")/quarkdown.cmd" "$@"'
+
         echo $installDir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     # All platforms
